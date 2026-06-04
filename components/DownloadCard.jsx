@@ -127,7 +127,6 @@ export default function DownloadCard({
   };
 
   const statusInfo = getStatusInfo();
-  const isLoading = status === 'fetching' || status === 'downloading';
   const gradientColors = platform
     ? platform.gradient.length >= 2
       ? platform.gradient
