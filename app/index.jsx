@@ -10,6 +10,7 @@ import {
   AppState,
   Switch,
   Animated,
+  Easing,
 } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -49,6 +50,29 @@ export default function HomeScreen() {
   const [clipboardUrl, setClipboardUrl] = useState('');
   const [showClipboardBanner, setShowClipboardBanner] = useState(false);
   const slideAnim = useRef(new Animated.Value(-100)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
+  // Floating animation for logo
+  useEffect(() => {
+    const float = Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: -5,
+          duration: 2200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 0,
+          duration: 2200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    );
+    float.start();
+    return () => float.stop();
+  }, []);
 
   // Banner animations
   const triggerBanner = (show) => {
@@ -141,7 +165,7 @@ export default function HomeScreen() {
           {/* Professional Header */}
           <View style={styles.header}>
             <View style={styles.logoRow}>
-              <View style={styles.logoIcon}>
+              <Animated.View style={[styles.logoIcon, { transform: [{ translateY: floatAnim }] }]}>
                 <LinearGradient
                   colors={[Colors.primary, Colors.primaryLight]}
                   start={{ x: 0, y: 0 }}
@@ -151,7 +175,7 @@ export default function HomeScreen() {
                   <Ionicons name="sparkles" size={18} color="#FFF" />
                 </LinearGradient>
                 <Ionicons name="download" size={16} color={Colors.primaryLight} style={styles.logoArrow} />
-              </View>
+              </Animated.View>
               <View style={styles.headerTextContainer}>
                 <Text style={styles.title}>
                   TikDownloader<Text style={styles.titleHighlight}>COL</Text>

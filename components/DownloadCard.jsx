@@ -28,6 +28,26 @@ export default function DownloadCard({
   const progressAnim = useRef(new Animated.Value(0)).current;
   const shakeAnim = useRef(new Animated.Value(0)).current;
   const checkAnim = useRef(new Animated.Value(0)).current;
+  const shimmerAnim = useRef(new Animated.Value(0)).current;
+
+  const isLoading = status === 'fetching' || status === 'downloading';
+
+  // Shimmer animation during download
+  useEffect(() => {
+    if (isLoading) {
+      const shimmer = Animated.loop(
+        Animated.timing(shimmerAnim, {
+          toValue: 1,
+          duration: 1500,
+          useNativeDriver: true,
+        })
+      );
+      shimmer.start();
+      return () => shimmer.stop();
+    } else {
+      shimmerAnim.setValue(0);
+    }
+  }, [isLoading]);
 
   // Pulse animation for download button
   useEffect(() => {
@@ -161,19 +181,39 @@ export default function DownloadCard({
               <Ionicons name={statusInfo.icon} size={22} color={statusInfo.color} />
               <Text style={styles.progressText}>{statusInfo.text}</Text>
             </View>
-          <View style={styles.progressBarBg}>
-            <Animated.View style={[styles.progressBarFill, { width: progressWidth }]}>
-              <LinearGradient
-                colors={gradientColors}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={StyleSheet.absoluteFill}
-              />
-            </Animated.View>
-            {/* Shimmer effect */}
-            <View style={styles.shimmer} />
+            <View style={styles.progressBarBg}>
+              <Animated.View style={[styles.progressBarFill, { width: progressWidth }]}>
+                <LinearGradient
+                  colors={gradientColors}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={StyleSheet.absoluteFill}
+                />
+                <Animated.View
+                  style={[
+                    styles.shimmer,
+                    {
+                      transform: [
+                        {
+                          translateX: shimmerAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [-180, 250],
+                          }),
+                        },
+                      ],
+                    },
+                  ]}
+                >
+                  <LinearGradient
+                    colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.45)', 'rgba(255, 255, 255, 0)']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    style={StyleSheet.absoluteFill}
+                  />
+                </Animated.View>
+              </Animated.View>
+            </View>
           </View>
-        </View>
         </View>
       )}
 
@@ -319,10 +359,8 @@ const styles = StyleSheet.create({
   shimmer: {
     position: 'absolute',
     top: 0,
-    left: 0,
-    right: 0,
     bottom: 0,
-    opacity: 0.15,
+    width: 80,
   },
   // Complete
   completeContainer: {
