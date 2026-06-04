@@ -25,6 +25,33 @@ import QualitySelector from '../components/QualitySelector';
 import { useDownload } from '../hooks/useDownload';
 import { Colors, Spacing, BorderRadius, Shadows } from '../constants/colors';
 import { detectPlatform } from '../services/platformDetector';
+import { getHistory } from '../services/storage';
+import { LayoutAnimation } from 'react-native';
+
+function FAQItem({ question, answer }) {
+  const [expanded, setExpanded] = useState(false);
+  const toggle = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setExpanded(!expanded);
+  };
+  return (
+    <TouchableOpacity onPress={toggle} activeOpacity={0.8} style={styles.faqItem}>
+      <View style={styles.faqHeader}>
+        <Text style={styles.faqQuestion}>{question}</Text>
+        <Ionicons
+          name={expanded ? 'chevron-up' : 'chevron-down'}
+          size={16}
+          color={Colors.primary}
+        />
+      </View>
+      {expanded && (
+        <View style={styles.faqAnswerContainer}>
+          <Text style={styles.faqAnswer}>{answer}</Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+}
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -51,6 +78,42 @@ export default function HomeScreen() {
   const [showClipboardBanner, setShowClipboardBanner] = useState(false);
   const slideAnim = useRef(new Animated.Value(-100)).current;
   const floatAnim = useRef(new Animated.Value(0)).current;
+
+  // New features state
+  const [stats, setStats] = useState({ tiktok: 0, instagram: 0, facebook: 0 });
+  const [latestDownload, setLatestDownload] = useState(null);
+
+  const loadHistoryAndStats = async () => {
+    try {
+      const history = await getHistory();
+      const counts = { tiktok: 0, instagram: 0, facebook: 0 };
+      history.forEach((item) => {
+        const plat = item.platform?.toLowerCase();
+        if (counts[plat] !== undefined) {
+          counts[plat]++;
+        }
+      });
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      setStats(counts);
+      if (history.length > 0) {
+        setLatestDownload(history[0]);
+      } else {
+        setLatestDownload(null);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    loadHistoryAndStats();
+  }, []);
+
+  useEffect(() => {
+    if (status === 'complete') {
+      loadHistoryAndStats();
+    }
+  }, [status]);
 
   // Floating animation for logo
   useEffect(() => {
@@ -305,6 +368,98 @@ export default function HomeScreen() {
                   </View>
                 ))}
               </View>
+            </View>
+          )}
+
+          {/* Stats Dashboard */}
+          {status === 'idle' && (
+            <View style={styles.statsWrapper}>
+              <View style={styles.statsContainer}>
+                <View style={styles.statCard}>
+                  <View style={[styles.statIconBadge, { backgroundColor: 'rgba(255, 0, 80, 0.1)' }]}>
+                    <Ionicons name="musical-notes-outline" size={14} color="#FF0050" />
+                  </View>
+                  <Text style={styles.statNumber}>{stats.tiktok}</Text>
+                  <Text style={styles.statLabel}>TikTok</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <View style={[styles.statIconBadge, { backgroundColor: 'rgba(221, 42, 123, 0.1)' }]}>
+                    <Ionicons name="logo-instagram" size={14} color="#DD2A7B" />
+                  </View>
+                  <Text style={styles.statNumber}>{stats.instagram}</Text>
+                  <Text style={styles.statLabel}>Instagram</Text>
+                </View>
+                <View style={styles.statCard}>
+                  <View style={[styles.statIconBadge, { backgroundColor: 'rgba(24, 119, 242, 0.1)' }]}>
+                    <Ionicons name="logo-facebook" size={14} color="#1877F2" />
+                  </View>
+                  <Text style={styles.statNumber}>{stats.facebook}</Text>
+                  <Text style={styles.statLabel}>Facebook</Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* Latest Download Card */}
+          {status === 'idle' && latestDownload && (
+            <View style={styles.latestDownloadWrapper}>
+              <BlurView intensity={25} tint="dark" style={StyleSheet.absoluteFill} />
+              <View style={styles.latestDownloadInner}>
+                <View style={styles.latestDownloadHeader}>
+                  <View style={styles.latestDownloadTitleRow}>
+                    <Ionicons
+                      name={
+                        latestDownload.platform === 'tiktok'
+                          ? 'musical-notes'
+                          : latestDownload.platform === 'instagram'
+                          ? 'logo-instagram'
+                          : 'logo-facebook'
+                      }
+                      size={16}
+                      color={
+                        latestDownload.platform === 'tiktok'
+                          ? '#FF0050'
+                          : latestDownload.platform === 'instagram'
+                          ? '#DD2A7B'
+                          : '#1877F2'
+                      }
+                    />
+                    <Text style={styles.latestDownloadTitle} numberOfLines={1}>
+                      {latestDownload.filename}
+                    </Text>
+                  </View>
+                  <Text style={styles.latestDownloadDate}>Última descarga</Text>
+                </View>
+                <View style={styles.latestDownloadActions}>
+                  <TouchableOpacity
+                    style={styles.latestShareBtn}
+                    onPress={() => shareDownload(latestDownload.uri)}
+                    activeOpacity={0.8}
+                  >
+                    <Ionicons name="share-social-outline" size={14} color="#FFF" />
+                    <Text style={styles.latestShareBtnText}>Compartir archivo</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* FAQs Accordion */}
+          {status === 'idle' && (
+            <View style={styles.faqWrapper}>
+              <Text style={styles.faqSectionTitle}>Preguntas Frecuentes</Text>
+              <FAQItem
+                question="¿Dónde se guardan los videos?"
+                answer="Los videos y música se descargan directamente en tu galería de fotos dentro de una carpeta llamada 'Download' o 'TikDownloaderCOL'."
+              />
+              <FAQItem
+                question="¿Puedo descargar videos de cuentas privadas?"
+                answer="No, debido a políticas de privacidad de los servidores, solo se permite la descarga de contenido que esté configurado como Público."
+              />
+              <FAQItem
+                question="¿Por qué a veces falla la descarga?"
+                answer="Las redes sociales cambian constantemente su código interno. Si una descarga falla, asegúrate de tener la app actualizada o reintenta en unos minutos."
+              />
             </View>
           )}
         </ScrollView>
@@ -603,5 +758,146 @@ const styles = StyleSheet.create({
   },
   clipboardBannerClose: {
     padding: 2,
+  },
+
+  // Stats
+  statsWrapper: {
+    marginTop: Spacing.lg,
+    marginBottom: Spacing.sm,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    gap: Spacing.sm,
+    justifyContent: 'space-between',
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.06)',
+    padding: Spacing.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statIconBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: Spacing.xs,
+  },
+  statNumber: {
+    color: '#FFF',
+    fontSize: 18,
+    fontWeight: '800',
+    marginTop: 2,
+  },
+  statLabel: {
+    color: Colors.textMuted,
+    fontSize: 11,
+    fontWeight: '600',
+    marginTop: 1,
+  },
+
+  // Latest Download Card
+  latestDownloadWrapper: {
+    marginTop: Spacing.md,
+    borderRadius: BorderRadius.lg,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+    ...Shadows.small,
+  },
+  latestDownloadInner: {
+    padding: Spacing.lg,
+    backgroundColor: 'transparent',
+  },
+  latestDownloadHeader: {
+    marginBottom: Spacing.md,
+  },
+  latestDownloadTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+    marginBottom: 4,
+  },
+  latestDownloadTitle: {
+    color: '#FFF',
+    fontSize: 15,
+    fontWeight: '700',
+    flex: 1,
+  },
+  latestDownloadDate: {
+    color: Colors.textMuted,
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  latestDownloadActions: {
+    flexDirection: 'row',
+  },
+  latestShareBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: Spacing.xs,
+    backgroundColor: Colors.primary,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.md,
+    flex: 1,
+  },
+  latestShareBtnText: {
+    color: '#FFF',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+
+  // FAQs
+  faqWrapper: {
+    marginTop: Spacing.xl,
+    paddingTop: Spacing.md,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.06)',
+  },
+  faqSectionTitle: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: Spacing.md,
+    letterSpacing: 0.3,
+  },
+  faqItem: {
+    backgroundColor: 'rgba(255, 255, 255, 0.03)',
+    borderRadius: BorderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.05)',
+    padding: Spacing.md,
+    marginBottom: Spacing.sm,
+  },
+  faqHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  faqQuestion: {
+    color: Colors.textPrimary,
+    fontSize: 14,
+    fontWeight: '600',
+    flex: 1,
+    paddingRight: Spacing.sm,
+  },
+  faqAnswerContainer: {
+    marginTop: Spacing.sm,
+    paddingTop: Spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.04)',
+  },
+  faqAnswer: {
+    color: Colors.textSecondary,
+    fontSize: 13,
+    lineHeight: 18,
+    fontWeight: '500',
   },
 });
