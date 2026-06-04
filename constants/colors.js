@@ -1,31 +1,31 @@
 export const Colors = {
   // Base
-  background: '#0A0A0F',
-  surface: '#13131A',
-  surfaceElevated: '#1C1C28',
-  surfaceHover: '#242436',
-  border: 'rgba(255, 255, 255, 0.06)',
-  borderLight: 'rgba(255, 255, 255, 0.12)',
+  background: '#04040A',
+  surface: 'rgba(20, 20, 32, 0.4)', // For glassmorphism
+  surfaceElevated: 'rgba(30, 30, 48, 0.65)',
+  surfaceHover: 'rgba(40, 40, 60, 0.8)',
+  border: 'rgba(255, 255, 255, 0.08)',
+  borderLight: 'rgba(255, 255, 255, 0.15)',
 
-  // Primary
-  primary: '#7C5CFC',
-  primaryLight: '#9B7FFF',
-  primaryDark: '#5A3DD6',
-  primaryGlow: 'rgba(124, 92, 252, 0.25)',
+  // Primary (Cyberpunk / Premium accents)
+  primary: '#00F0FF',      // Neon Cyan
+  primaryLight: '#7000FF', // Deep Neon Purple
+  primaryDark: '#FF0055',  // Neon Pink/Red
+  primaryGlow: 'rgba(0, 240, 255, 0.25)',
 
   // Text
   textPrimary: '#FFFFFF',
-  textSecondary: '#8E8EA0',
-  textMuted: '#5A5A6E',
-  textInverse: '#0A0A0F',
+  textSecondary: '#A0A0B0',
+  textMuted: '#606075',
+  textInverse: '#04040A',
 
   // Status
-  success: '#00D68F',
-  successGlow: 'rgba(0, 214, 143, 0.2)',
-  error: '#FF4757',
-  errorGlow: 'rgba(255, 71, 87, 0.2)',
-  warning: '#FFA502',
-  warningGlow: 'rgba(255, 165, 2, 0.2)',
+  success: '#00FFAA',
+  successGlow: 'rgba(0, 255, 170, 0.2)',
+  error: '#FF3366',
+  errorGlow: 'rgba(255, 51, 102, 0.2)',
+  warning: '#FFCC00',
+  warningGlow: 'rgba(255, 204, 0, 0.2)',
 
   // Platform gradients
   tiktok: {

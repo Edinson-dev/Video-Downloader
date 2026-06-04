@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TikDownloaderCOL — Descarga videos sin marca de agua</title>
+  <meta name="description" content="Descarga videos de TikTok, Instagram y Facebook sin marca de agua, gratis y sin registro. Disponible para Android." />
+  <meta name="theme-color" content="#050510" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ░░ CANVAS for particles ░░ -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ░░ NAV ░░ -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <div class="logo-cube">
+        <div class="cube-face face-front">↓</div>
+        <div class="cube-face face-back">↓</div>
+        <div class="cube-face face-left">↓</div>
+        <div class="cube-face face-right">↓</div>
+        <div class="cube-face face-top">↓</div>
+        <div class="cube-face face-bottom">↓</div>
+      </div>
+      <span>TikDownloader<em>COL</em></span>
+    </div>
+    <a href="#download" class="nav-cta">Descargar</a>
+  </nav>
+
+  <!-- ░░ HERO ░░ -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <!-- Left content -->
+      <div class="hero-content" data-aos="fade-right">
+        <div class="hero-badge">
+          <span class="badge-pulse"></span>
+          <span id="badge-version">v1.1.0</span> disponible ahora
+        </div>
+
+        <h1 class="hero-title">
+          Descarga
+          <span class="title-3d" data-text="Videos">Videos</span>
+          <br />sin límites
+        </h1>
+
+        <p class="hero-desc">
+          TikTok, Instagram y Facebook — sin marca de agua, gratis, sin registro.<br/>
+          Alta resolución. Sin límites de velocidad.
+        </p>
+
+        <div class="platforms-pill-row">
+          <div class="pill tiktok"><span class="pill-dot" style="background:#FF0050"></span>TikTok</div>
+          <div class="pill instagram"><span class="pill-dot" style="background:#DD2A7B"></span>Instagram</div>
+          <div class="pill facebook"><span class="pill-dot" style="background:#1877F2"></span>Facebook</div>
+        </div>
+
+        <div id="download" class="download-wrap">
+          <button id="dl-btn" class="dl-btn" onclick="triggerDownload()">
+            <div class="dl-btn-bg"></div>
+            <div class="dl-btn-shine"></div>
+            <svg class="dl-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <div class="dl-text">
+              <span class="dl-label">Descargar APK</span>
+              <span class="dl-sub" id="dl-version-sub">v1.1.0 · Android</span>
+            </div>
+            <div class="dl-arrow">›</div>
+          </button>
+          <p class="dl-note">Solo Android · Gratis · Sin registro</p>
+        </div>
+
+        <!-- Changelog -->
+        <div class="changelog-box" id="changelog-box">
+          <p class="changelog-header">🆕 Novedades</p>
+          <ul id="changelog-list"></ul>
+        </div>
+      </div>
+
+      <!-- Right — 3D Phone mockup -->
+      <div class="hero-visual" data-aos="fade-left">
+        <div class="phone-scene">
+          <div class="phone-glow"></div>
+          <div class="phone-3d" id="phone3d">
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="app-ui">
+                  <div class="app-header">
+                    <div class="app-logo-dot"></div>
+                    <span>TikDownloaderCOL</span>
+                  </div>
+                  <div class="app-url-bar">
+                    <div class="app-url-icon">🔗</div>
+                    <div class="app-url-text">Pega el link aquí...</div>
+                  </div>
+                  <div class="app-platforms">
+                    <div class="app-chip chip-tt">TikTok</div>
+                    <div class="app-chip chip-ig">Instagram</div>
+                    <div class="app-chip chip-fb">Facebook</div>
+                  </div>
+                  <div class="app-btn-preview">
+                    <div class="app-dl-btn">
+                      <span>⬇</span> Descargar Video
+                    </div>
+                  </div>
+                  <div class="app-quality-row">
+                    <span class="app-q">HD 1080p</span>
+                    <span class="app-q-badge">✔</span>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-home-bar"></div>
+            </div>
+          </div>
+          <!-- Floating badges around phone -->
+          <div class="float-badge badge-a">Sin watermark ✓</div>
+          <div class="float-badge badge-b">1080p HD</div>
+          <div class="float-badge badge-c">MP3 ♪</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ FEATURES 3D CARDS ░░ -->
+  <section class="features">
+    <div class="section-header" data-aos="fade-up">
+      <p class="section-label">Por qué elegirnos</p>
+      <h2 class="section-title">Todo lo que necesitas</h2>
+    </div>
+    <div class="cards-grid">
+      <div class="card-3d" data-aos="fade-up" data-aos-delay="0">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-icon" style="--c:#00F0FF">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h3>Alta Calidad</h3>
+            <p>HD y Full HD disponibles</p>
+          </div>
+          <div class="card-back" style="--card-bg: #00F0FF">
+            <p>Descarga en la resolución más alta disponible directamente desde la fuente. Hasta 1080p.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-3d" data-aos="fade-up" data-aos-delay="80">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-icon" style="--c:#7000FF">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Sin Marca de Agua</h3>
+            <p>Videos limpios siempre</p>
+          </div>
+          <div class="card-back" style="--card-bg: #7000FF">
+            <p>Todos los videos se descargan sin logos, marcas ni identificadores de plataformas.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-3d" data-aos="fade-up" data-aos-delay="160">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-icon" style="--c:#FF0055">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <h3>100% Gratis</h3>
+            <p>Sin suscripciones nunca</p>
+          </div>
+          <div class="card-back" style="--card-bg: #FF0055">
+            <p>Sin pagos, sin anuncios invasivos, sin límites de descargas. Completamente gratis.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-3d" data-aos="fade-up" data-aos-delay="240">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-icon" style="--c:#00FFAA">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+            </div>
+            <h3>Audio MP3</h3>
+            <p>Extrae solo la música</p>
+          </div>
+          <div class="card-back" style="--card-bg: #00FFAA">
+            <p>¿Quieres solo el sonido? Activa el modo MP3 y guarda el audio directamente en tu galería.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-3d" data-aos="fade-up" data-aos-delay="320">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-icon" style="--c:#FFCC00">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </div>
+            <h3>Auto-Updates</h3>
+            <p>Siempre al día</p>
+          </div>
+          <div class="card-back" style="--card-bg: #FFCC00">
+            <p>La app te avisa automáticamente cuando hay una nueva versión disponible con mejoras.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-3d" data-aos="fade-up" data-aos-delay="400">
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-icon" style="--c:#FF6B35">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <h3>Portapapeles Smart</h3>
+            <p>Pega automáticamente</p>
+          </div>
+          <div class="card-back" style="--card-bg: #FF6B35">
+            <p>Detecta links copiados al portapapeles y te ofrece pegarlos automáticamente al abrir la app.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ HOW IT WORKS ░░ -->
+  <section class="how">
+    <div class="section-header" data-aos="fade-up">
+      <p class="section-label">Guía rápida</p>
+      <h2 class="section-title">Así de fácil</h2>
+    </div>
+    <div class="steps-3d">
+      <div class="step-item" data-aos="zoom-in" data-aos-delay="0">
+        <div class="step-orb">1</div>
+        <div class="step-line"></div>
+        <div class="step-box">
+          <h3>Instala la APK</h3>
+          <p>Descárgala aquí y ábrela en tu Android. Permite instalar de fuentes desconocidas si te lo pide.</p>
+        </div>
+      </div>
+      <div class="step-item" data-aos="zoom-in" data-aos-delay="150">
+        <div class="step-orb">2</div>
+        <div class="step-line"></div>
+        <div class="step-box">
+          <h3>Copia el Link</h3>
+          <p>Abre TikTok, Instagram o Facebook, elige un video y copia su enlace.</p>
+        </div>
+      </div>
+      <div class="step-item" data-aos="zoom-in" data-aos-delay="300">
+        <div class="step-orb">3</div>
+        <div class="step-line last"></div>
+        <div class="step-box">
+          <h3>¡Descarga!</h3>
+          <p>Pega el link y presiona Descargar. El video se guarda en tu galería sin marca de agua.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CTA FINAL ░░ -->
+  <section class="cta-final" data-aos="zoom-in">
+    <div class="cta-card">
+      <div class="cta-glow-1"></div>
+      <div class="cta-glow-2"></div>
+      <h2>¿Listo para descargar?</h2>
+      <p>Únete a miles de usuarios que ya disfrutan sus videos favoritos sin límites.</p>
+      <button class="cta-dl-btn" onclick="triggerDownload()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descargar APK Gratis
+      </button>
+    </div>
+  </section>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer class="footer">
+    <div class="footer-logo">TikDownloader<em>COL</em></div>
+    <p class="footer-sub">Hecho con ❤️ para Colombia · <span id="footer-version">v1.1.0</span></p>
+    <p class="footer-disc">No afiliado a TikTok, Meta ni ByteDance · Solo para contenido público y uso personal.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
