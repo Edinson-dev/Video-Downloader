@@ -117,7 +117,8 @@ export default function SettingsScreen() {
           <Text style={styles.subtitle}>Personaliza tu experiencia</Text>
         </View>
 
-        {/* API Settings */}
+        {/* API Settings - Ocultado para producción */}
+        {/*
         <SectionHeader title="SERVIDOR API" />
         <View style={styles.section}>
           <SettingRow
@@ -187,6 +188,7 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           )}
         </View>
+        */}
 
         {/* Download Settings */}
         <SectionHeader title="DESCARGA" />
