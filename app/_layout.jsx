@@ -10,7 +10,7 @@ import { Colors } from '../constants/colors';
 import packageJson from '../package.json';
 
 // URL del manifiesto de versiones en GitHub Pages
-const VERSION_URL = 'https://edinson-dev.github.io/video-downloader/version.json';
+const VERSION_URL = 'https://edinson-dev.github.io/Video-Downloader/version.json';
 
 export default function RootLayout() {
   const [isSplashReady, setIsSplashReady] = useState(false);
