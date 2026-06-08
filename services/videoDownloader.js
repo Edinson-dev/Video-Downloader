@@ -67,75 +67,110 @@ export async function getVideoDownloadUrl(videoUrl, quality = '1080', isAudioOnl
   }
 
   // Fallback to Cobalt for Instagram/Facebook
-  try {
-    const requestBody = {
-      url: videoUrl,
-      videoQuality: quality,
-      filenameStyle: 'pretty',
-      downloadMode: isAudioOnly ? 'audio' : 'auto',
-    };
-    
-    console.log('[DEBUG] POST to:', apiUrl);
+  const fallbackUrls = [
+    apiUrl,
+    'https://nuko-c.meowing.de',
+    'https://subito-c.meowing.de',
+    'https://apicobalt.mgytr.top',
+    'https://lime.clxxped.lol',
+    'https://grapefruit.clxxped.lol',
+  ];
 
-    const headers = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    };
-    if (settings.apiToken) {
-      headers['Authorization'] = `Bearer ${settings.apiToken.trim()}`;
-    }
+  // Remove duplicates in case settings.apiUrl is one of these
+  const uniqueUrls = [...new Set(fallbackUrls.filter(Boolean))];
 
-    let response = await fetch(apiUrl, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(requestBody),
-    });
+  const requestBody = {
+    url: videoUrl,
+    videoQuality: quality,
+    filenameStyle: 'pretty',
+    downloadMode: isAudioOnly ? 'audio' : 'auto',
+  };
 
-    let data = await response.json();
+  const baseHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+  };
 
-    if (data.status === 'error' && data.error?.code === 'error.api.invalid_body') {
-      const minimalBody = { 
-        url: videoUrl,
-        downloadMode: isAudioOnly ? 'audio' : 'auto',
-      };
-      
-      response = await fetch(apiUrl, {
+  let data = null;
+  let lastError = null;
+
+  for (const url of uniqueUrls) {
+    try {
+      console.log('[DEBUG] POST to:', url);
+      const headers = { ...baseHeaders };
+      // Only send custom authorization token to the user's configured API url
+      if (url === apiUrl && settings.apiToken) {
+        headers['Authorization'] = `Bearer ${settings.apiToken.trim()}`;
+      }
+
+      let response = await fetch(url, {
         method: 'POST',
         headers,
-        body: JSON.stringify(minimalBody),
+        body: JSON.stringify(requestBody),
       });
+
       data = await response.json();
-    }
 
-    if (data.status === 'error') {
-      const code = data.error?.code || '';
-      const friendlyMessage = COBALT_ERROR_MAP[code] || `Error del servidor: ${code || 'Error desconocido'}`;
-      throw new Error(friendlyMessage);
-    }
+      if (data.status === 'error' && data.error?.code === 'error.api.invalid_body') {
+        const minimalBody = { 
+          url: videoUrl,
+          downloadMode: isAudioOnly ? 'audio' : 'auto',
+        };
+        
+        response = await fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(minimalBody),
+        });
+        data = await response.json();
+      }
 
-    if (data.status === 'tunnel' || data.status === 'redirect') {
-      return {
-        url: data.url,
-        filename: data.filename || `${isAudioOnly ? 'audio' : 'video'}_${Date.now()}.${isAudioOnly ? 'mp3' : 'mp4'}`,
-      };
-    }
+      if (data.status === 'error') {
+        const code = data.error?.code || '';
+        // If it's an auth error or rate limit, we can try another server
+        if (code.includes('auth') || code.includes('jwt') || code.includes('key') || code.includes('rate_limit')) {
+          console.log(`[DEBUG] server error ${code} on ${url}, trying next fallback...`);
+          lastError = new Error(COBALT_ERROR_MAP[code] || `Error del servidor: ${code}`);
+          continue;
+        }
+        
+        const friendlyMessage = COBALT_ERROR_MAP[code] || `Error del servidor: ${code || 'Error desconocido'}`;
+        throw new Error(friendlyMessage);
+      }
 
-    if (data.status === 'picker') {
-      return {
-        url: data.picker[0]?.url,
-        filename: data.filename || `${isAudioOnly ? 'audio' : 'video'}_${Date.now()}.${isAudioOnly ? 'mp3' : 'mp4'}`,
-        picker: data.picker,
-        isMultiple: true,
-      };
+      // Success, break the loop
+      break;
+    } catch (error) {
+      console.log(`[DEBUG] Error on ${url}:`, error.message);
+      if (error.message.includes('auth') || error.message.includes('servidor') || error.message.includes('fetch') || error.message.includes('Network') || error instanceof TypeError) {
+        lastError = error;
+        continue;
+      }
+      throw error;
     }
-
-    throw new Error('Formato de respuesta inesperado');
-  } catch (error) {
-    if (error.message === 'Network request failed' || error.message.includes('Failed to fetch') || error instanceof TypeError) {
-      throw new Error('No se pudo conectar con el servidor. Intenta cambiar la URL de la API en Ajustes.');
-    }
-    throw error;
   }
+
+  if (!data) {
+    throw lastError || new Error('No se pudo conectar con ningún servidor. Intenta cambiar la URL de la API en Ajustes.');
+  }
+
+  if (data.status === 'tunnel' || data.status === 'redirect') {
+    return {
+      url: data.url,
+      filename: data.filename || `${isAudioOnly ? 'audio' : 'video'}_${Date.now()}.${isAudioOnly ? 'mp3' : 'mp4'}`,
+    };
+  }
+
+  if (data.status === 'picker') {
+    return {
+      url: data.picker[0]?.url,
+      filename: data.filename || `${isAudioOnly ? 'audio' : 'video'}_${Date.now()}.${isAudioOnly ? 'mp3' : 'mp4'}`,
+      picker: data.picker,
+      isMultiple: true,
+    };
+  }
+
+  throw new Error('Formato de respuesta inesperado');
 }
 
 /**
