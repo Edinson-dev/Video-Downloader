@@ -3,7 +3,7 @@
   "build": 2,
   "releaseDate": "2026-06-03",
   "mandatory": false,
-  "downloadUrl": "https://github.com/Edinson-dev/Video-Downloader/releases/download/v1.3.0/tikdownloader.v1.4.apk",
+  "downloadUrl": "https://github.com/Edinson-dev/Video-Downloader/releases/download/v1.4.0/tikdownloader.v1.4.apk",
   "changelog": [
     "✅ Descarga de TikTok sin Token JWT usando TikWM",
     "✨ Diseño premium Glassmorphism / Neon Dark Mode",
