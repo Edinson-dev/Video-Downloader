@@ -51,4 +51,4 @@ export const VIDEO_QUALITIES = [
 export const DEFAULT_QUALITY = '1080';
 
 // Default Cobalt API URL - user can change in settings
-export const DEFAULT_API_URL = 'https://api.cobalt.tools';
+export const DEFAULT_API_URL = 'https://cobalt-production-1ed0.up.railway.app';

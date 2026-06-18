@@ -67,13 +67,10 @@ export async function getVideoDownloadUrl(videoUrl, quality = '1080', isAudioOnl
   }
 
   // Fallback to Cobalt for Instagram/Facebook
+  // Los servidores públicos gratuitos de Cobalt han dejado de funcionar.
+  // El usuario DEBE configurar su propia URL y Token en los Ajustes.
   const fallbackUrls = [
     apiUrl,
-    'https://nuko-c.meowing.de',
-    'https://subito-c.meowing.de',
-    'https://apicobalt.mgytr.top',
-    'https://lime.clxxped.lol',
-    'https://grapefruit.clxxped.lol',
   ];
 
   // Remove duplicates in case settings.apiUrl is one of these
@@ -151,7 +148,7 @@ export async function getVideoDownloadUrl(videoUrl, quality = '1080', isAudioOnl
   }
 
   if (!data) {
-    throw lastError || new Error('No se pudo conectar con ningún servidor. Intenta cambiar la URL de la API en Ajustes.');
+    throw lastError || new Error('Los servidores públicos de descarga ya no están disponibles. Por favor, ve a la pestaña "Ajustes" y configura tu propia URL de la API de Cobalt y Token.');
   }
 
   if (data.status === 'tunnel' || data.status === 'redirect') {
