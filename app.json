@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "TikDownloaderCOL",
-    "slug": "video-downloader",
+    "slug": "video-downloader-col",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -60,9 +60,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "e196f5fc-0dc6-44fa-88e0-e8d807aad1dd"
+        "projectId": "cc5d164e-2f7d-4d3f-9128-6ba0a7a6d003"
       }
     },
-    "owner": "soyedinz"
+    "owner": "ediinxon"
   }
 }

@@ -16,6 +16,7 @@ import GradientBackground from '../components/GradientBackground';
 import QualitySelector from '../components/QualitySelector';
 import { getSettings, updateSettings, resetSettings } from '../services/storage';
 import { Colors, Spacing, BorderRadius } from '../constants/colors';
+import { DEFAULT_API_URL } from '../constants/platforms';
 
 function SettingRow({ icon, label, description, children, onPress }) {
   const Wrapper = onPress ? TouchableOpacity : View;
@@ -131,7 +132,7 @@ export default function SettingsScreen() {
                 style={styles.urlInput}
                 value={tempUrl}
                 onChangeText={setTempUrl}
-                placeholder="https://cobaltapi.squair.xyz"
+                placeholder={DEFAULT_API_URL}
                 placeholderTextColor={Colors.textMuted}
                 autoCapitalize="none"
                 autoCorrect={false}
