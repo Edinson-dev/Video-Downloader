@@ -1,13 +1,12 @@
 {
-  "version": "1.1.0",
-  "build": 2,
-  "releaseDate": "2026-06-03",
+  "version": "1.5.0",
+  "build": 3,
+  "releaseDate": "2026-07-16",
   "mandatory": false,
-  "downloadUrl": "https://github.com/Edinson-dev/video-downloader/releases/download/v1.1.0/TikDownloaderCOL-v1.1.0.apk",
+  "downloadUrl": "https://github.com/Edinson-dev/Video-Downloader/releases/download/v1.5.0/TikDownloaderCOL-v1.5.0.apk",
   "changelog": [
-    "✅ Descarga de TikTok sin Token JWT usando TikWM",
-    "✨ Diseño premium Glassmorphism / Neon Dark Mode",
-    "📱 Soporte para Facebook e Instagram",
-    "🔧 Sistema de actualizaciones automáticas"
+    "✅ Nuevo servidor de descargas en Railway para Facebook e Instagram",
+    "🔧 Solucionados problemas de conexión de la API",
+    "✨ Optimización de rendimiento general"
   ]
 }
